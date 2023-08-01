@@ -1,10 +1,10 @@
 const sqlite3 = require("sqlite3").verbose();
 
-let db = new sqlite3.Database(":memory:", (err) => {
+let db = new sqlite3.Database("./db.sqlite", (err) => {
   if (err) {
     return console.error(err.message);
   }
-  console.log("Connected to the SQlite database.");
+  console.log("Connected to the SQLite database.");
 });
 
 db.serialize(() => {
