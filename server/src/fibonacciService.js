@@ -4,7 +4,7 @@ let db = new sqlite3.Database(":memory:", (err) => {
   if (err) {
     return console.error(err.message);
   }
-  console.log("Connected to SQlite database.");
+  console.log("Connected to the SQlite database.");
 });
 
 db.serialize(() => {
@@ -16,33 +16,20 @@ db.serialize(() => {
 });
 
 async function getFibonacci(number, res) {
-  let fib = [];
-  for (let i = 0; i < number; i++) {
-    fib[i] = await getFibonacciValue(i);
-  }
-  res.send(fib);
-}
-
-function getFibonacciValue(n) {
-  return new Promise((resolve) => {
-    db.get(
-      "SELECT value FROM fibonacci WHERE number = ?",
-      n,
-      function (err, row) {
-        if (row) {
-          resolve(row.value);
-        } else {
-          let fibValue =
-            n < 2 ? n : getFibonacciValue(n - 1) + getFibonacciValue(n - 2);
-          db.run("INSERT INTO fibonacci(number, value) VALUES(?, ?)", [
-            n,
-            fibValue,
-          ]);
-          resolve(fibValue);
+  const fib = [0, 1];
+  for (let i = 2; i < number; i++) {
+    fib[i] = fib[i - 1] + fib[i - 2];
+    db.run(
+      "INSERT OR IGNORE INTO fibonacci(number, value) VALUES(?, ?)",
+      [i, fib[i]],
+      (err) => {
+        if (err) {
+          console.error(err.message);
         }
       }
     );
-  });
+  }
+  res.send(fib.slice(0, number));
 }
 
 module.exports = { getFibonacci };
