@@ -25,19 +25,19 @@ function Fibonacci() {
   };
 
   return (
-    <Form onSubmit={submitHandler}>
-      <Form.Group>
+    <div className="container">
+      <Form onSubmit={submitHandler} className="form-group">
         <Form.Label>Enter a number</Form.Label>
         <Form.Control
           type="number"
           value={number}
           onChange={(e) => setNumber(e.target.value)}
         />
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
+        <Button variant="primary" type="submit" className="button">
+          Submit
+        </Button>
+      </Form>
+    </div>
   );
 }
 
