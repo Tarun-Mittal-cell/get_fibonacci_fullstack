@@ -8,11 +8,18 @@ let db = new sqlite3.Database("./db.sqlite", (err) => {
 });
 
 db.serialize(() => {
-  db.run(`CREATE TABLE fibonacci (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            number INTEGER UNIQUE,
-            value INTEGER
-          )`);
+  db.get(
+    `SELECT name FROM sqlite_master WHERE type='table' AND name='fibonacci';`,
+    (err, row) => {
+      if (!row) {
+        db.run(`CREATE TABLE fibonacci (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                number INTEGER UNIQUE,
+                value INTEGER
+              )`);
+      }
+    }
+  );
 });
 
 async function getFibonacci(number, res) {
